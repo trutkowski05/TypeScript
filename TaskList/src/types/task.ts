@@ -1,6 +1,8 @@
-interface Task {
-    id: number;
-    title: string;
-    isCompleted: boolean;
-    createdAt: string;
+export interface Task {
+    id: string
+    title: string
+    isCompleted: boolean
+    createdAt: string
 }
+
+export type Filter = "all" | "active" | "completed"

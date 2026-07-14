@@ -1,7 +1,7 @@
 function App() {
   return (
     <div>
-      <h1>TaskList</h1>
+      <span>Tekst</span>
     </div>
   )
 }
