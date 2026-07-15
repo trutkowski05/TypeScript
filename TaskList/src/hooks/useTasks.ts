@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Task, Filter } from '../types/task'
+import type { Task, Filter } from '../types/task'
 import { loadTasks, saveTasks } from '../utils/storage'
 
 export function useTasks() {
@@ -12,7 +12,7 @@ export function useTasks() {
             title: title,
             isCompleted: false,
             createdAt: new Date().toISOString()
-            
+
         }
         setTasks([...tasks, newTask])
         saveTasks([...tasks, newTask])
@@ -25,7 +25,7 @@ export function useTasks() {
     }
 
     const toggleTask = (id: string) => {
-        const updatedTasks = tasks.map(t => t.id === id ? {...t, isCompleted: !t.isCompleted} : t)
+        const updatedTasks = tasks.map(t => t.id === id ? { ...t, isCompleted: !t.isCompleted } : t)
         setTasks(updatedTasks)
         saveTasks(updatedTasks)
     }

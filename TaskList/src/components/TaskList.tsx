@@ -1,4 +1,4 @@
-import { Task } from '../types/task'
+import type { Task } from '../types/task'
 import TaskItem from './TaskItem'
 
 interface TaskListProps {
@@ -18,7 +18,13 @@ function TaskList({ tasks, onToggle, onRemove }: TaskListProps) {
 
     return (
         <div className="flex flex-col gap-2">
-
+            {tasks.map(task =>
+                <TaskItem
+                    key={task.id}
+                    task={task}
+                    onToggle={onToggle}
+                    onRemove={onRemove} >
+                </TaskItem>)}
         </div>
     )
 }
