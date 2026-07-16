@@ -21,7 +21,7 @@ interface WorkoutStatistics {
     activities: ActivityStats[]
 }
 
-const DATA_PATH = path.join(__dirname, "data", "treningi.json")
+const DATA_PATH = path.join(import.meta.dirname, "data", "treningi.json")
 
 export function readWorkouts(): Workout[] {
     if (!fs.existsSync(DATA_PATH)) {
