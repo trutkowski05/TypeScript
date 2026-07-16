@@ -1,122 +1,155 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useEffect } from 'react'
+
+interface Workout {
+  id: string,
+  duration: number,
+  activity: string,
+  notes: string,
+  date: string
+}
+
+interface ActivityStats {
+  activity: string,
+  sum: number,
+  percentage: number
+}
+
+interface WorkoutStatistics {
+  totalDuration: number,
+  activities: ActivityStats[]
+}
+
+const API_BASE = "http://localhost:3001/api/treningi"
+
+const ACTIVITIES = [
+  "Bieganie",
+  "Siłownia",
+  "Rower",
+  "Pływanie",
+  "Joga"
+]
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [stats, setStats] = useState<WorkoutStatistics | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+  const [duration, setDuration] = useState<string>("")
+  const [activity, setActivity] = useState<string>(ACTIVITIES[0])
+  const [notes, setNotes] = useState<string>("")
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0])
 
-      <div className="ticks"></div>
+  const [from, setFrom] = useState<string>("")
+  const [to, setTo] = useState<string>("")
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+  const fetchWorkouts = async () => {
+    try {
+      const queryParams = new URLSearchParams()
+      if (from) {
+        queryParams.append('from', from)
+      }
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      if (to) {
+        queryParams.append('to', to)
+      }
+
+      const url = queryParams.toString() ? API_BASE + '?' + queryParams.toString() : API_BASE
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        throw new Error('Nie udało się pobrać danych')
+      }
+
+      const data = await response.json()
+      setWorkouts(data)
+    }
+
+    catch (err: any) {
+      setError(err.message || 'Błąd połączenia')
+    }
+  }
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(API_BASE + '/statistics')
+
+      if (!response.ok) {
+        throw new Error('Błąd pobierania statystyk')
+      }
+
+      const data = await response.json()
+      setStats(data)
+    }
+
+    catch (err: any) {
+      setError(err.message || 'Błąd połączenia')
+    }
+  }
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true)
+      await fetchWorkouts()
+      await fetchStats()
+      setLoading(false)
+    }
+    loadData()
+  }, [])
+  useEffect(() => {
+    fetchWorkouts()
+  }, [from, to])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    const parsedDuration = parseInt(duration)
+
+    if (isNaN(parsedDuration) || parsedDuration <= 0) {
+      setError('Czas trwania musi być liczbą dodatnią!')
+      return
+    }
+
+    try {
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ duration: parsedDuration, activity, notes, date })
+      })
+      if (!response.ok) {
+        const errData = await response.json()
+        throw new Error(errData.error || 'Błąd zapisu!')
+      }
+
+      setDuration('')
+      setNotes('')
+
+      await fetchWorkouts()
+      await fetchStats()
+    }
+    catch (err: any) {
+      setError(err.message || 'Błąd dodawania')
+
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      setError(null)
+      const response = await fetch(API_BASE + '/' + id, { method: 'DELETE' })
+
+      if (!response.ok) {
+        const errData = await response.json()
+        throw new Error(errData.error || 'Błąd zapisu!')
+      }
+      await fetchWorkouts()
+      await fetchStats()
+    }
+
+    catch (err: any) {
+      setError(err.message || 'Błąd usuwania')
+    }
+  }
 }
 
 export default App
