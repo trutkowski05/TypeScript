@@ -1,0 +1,12 @@
+{
+  "users": [],
+  "resources": [
+    {
+      "id": "123",
+      "name": "Biurko przy oknie",
+      "type": "DESK",
+      "isActive": true
+    }
+  ],
+  "bookings": []
+}

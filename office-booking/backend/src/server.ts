@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import cors from 'cors'
+import resourceRoutes from './routes/resourceRoutes'
 
 dotenv.config()
 
@@ -15,6 +16,8 @@ app.use(express.json())
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Serwer rezerwacji działa'})
 })
+
+app.use('/api/v1/resources', resourceRoutes)
 
 app.listen(PORT, () => {
     console.log(`Serwer działa na porcie ${PORT}`)
