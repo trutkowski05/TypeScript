@@ -6,6 +6,12 @@
       "name": "Biurko przy oknie",
       "type": "DESK",
       "isActive": true
+    },
+    {
+      "id": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "name": "Moje super nowe biurko",
+      "type": "DESK",
+      "isActive": true
     }
   ],
   "bookings": []

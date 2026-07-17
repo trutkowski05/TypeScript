@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import cors from 'cors'
 import resourceRoutes from './routes/resourceRoutes'
+import { errorHandler } from './middlewares/errorHandler'
 
 dotenv.config()
 
@@ -18,6 +19,8 @@ app.get('/health', (req, res) => {
 })
 
 app.use('/api/v1/resources', resourceRoutes)
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
     console.log(`Serwer działa na porcie ${PORT}`)

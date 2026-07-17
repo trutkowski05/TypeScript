@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { randomUUID } from "crypto";
 import { fileRepository } from "../repositories/fileRepository";
 import { createResourceSchema } from "../schemas/resource.schema";
@@ -19,7 +19,7 @@ export const getAllResources = async (req: Request, res: Response) => {
     }
 }
 
-export const createResource = async (req: Request, res: Response) => {
+export const createResource = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const validatedData = createResourceSchema.parse(req.body)
 
@@ -44,7 +44,6 @@ export const createResource = async (req: Request, res: Response) => {
     }
 
     catch (error) {
-        console.error("Błąd zapisu: ", error)
-        return res.status(400).json({ error: "Nie udało się utworzyć biurka. Sprawdź, czy wysłałeś poprawne dane!" })
+        next(error)
     }
 }
