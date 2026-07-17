@@ -1,0 +1,18 @@
+{
+  "name": "systemrezerwacji",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+  "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+  "dev:backend": "cd backend && npx tsx --watch server.ts",
+  "dev:frontend": "cd frontend && npm run dev"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  }
+}
