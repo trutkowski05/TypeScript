@@ -1,5 +1,12 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "8f795be2-eed7-463a-b7b9-183c628b5c29",
+      "email": "dyrektor@biuro.pl",
+      "passwordHash": "$2b$10$.xn1QHopi48pfVmTD7jSPOMdchKP4vji7NT30D5eRuHnY1zKyS4Vq",
+      "role": "ADMIN"
+    }
+  ],
   "resources": [
     {
       "id": "123",
