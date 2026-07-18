@@ -5,6 +5,41 @@ export const ResourceList = () => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>('');
+
+  const handleBooking = async (resourceId: string) => {
+    if (!selectedDate) {
+      alert("Najpierw wybierz datę z kalendarza!");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/bookings', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          resourceId: resourceId, 
+          userId: "99e68513-fff6-415a-928e-12b79ed3c999", 
+          date: selectedDate
+        })
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.message || "Nie udało się zarezerwować biurka");
+      }
+
+      alert("SUKCES! " + json.message);
+      
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert("BŁĄD: " + err.message);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -51,33 +86,60 @@ export const ResourceList = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {resources.map((resource) => (
-        <div 
-          key={resource.id} 
-          className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-              resource.type === 'DESK' 
-                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                : 'bg-purple-50 text-purple-700 border border-purple-200'
-            }`}>
-              {resource.type === 'DESK' ? 'Biurko' : 'Pokój'}
-            </span>
+    <div>
+      <div className="mb-8 bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <label className="font-semibold text-slate-700">Wybierz datę rezerwacji:</label>
+        <input 
+          type="date" 
+          className="border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resources.map((resource) => (
+          <div 
+            key={resource.id} 
+            className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300 flex flex-col"
+          >
+            <div className="flex justify-between items-start mb-4">
+              <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                resource.type === 'DESK' 
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                  : 'bg-purple-50 text-purple-700 border border-purple-200'
+              }`}>
+                {resource.type === 'DESK' ? 'Biurko' : 'Pokój'}
+              </span>
+              
+              <span className={`flex items-center gap-1.5 text-sm font-medium ${
+                resource.isActive ? 'text-emerald-600' : 'text-slate-400'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${resource.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                {resource.isActive ? 'Dostępne' : 'Niedostępne'}
+              </span>
+            </div>
             
-            <span className={`flex items-center gap-1.5 text-sm font-medium ${
-              resource.isActive ? 'text-emerald-600' : 'text-slate-400'
-            }`}>
-              <div className={`w-2 h-2 rounded-full ${resource.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-              {resource.isActive ? 'Dostępne' : 'Niedostępne'}
-            </span>
+            <h3 className="text-xl font-bold text-slate-800 mb-1">{resource.name}</h3>
+            <p className="text-xs text-slate-400 font-mono mb-6">ID: {resource.id.split('-')[0]}</p>
+
+            <div className="mt-auto pt-4 border-t border-slate-100">
+              <button 
+                onClick={() => handleBooking(resource.id)} 
+                disabled={!resource.isActive} 
+                className={`w-full py-2 rounded-lg font-semibold transition-colors ${
+                  resource.isActive 
+                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
+                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                }`}
+              >
+                {resource.isActive ? 'Zarezerwuj to miejsce' : 'Niedostępne'}
+              </button>
+            </div>
+
           </div>
-          
-          <h3 className="text-xl font-bold text-slate-800 mb-1">{resource.name}</h3>
-          <p className="text-xs text-slate-400 font-mono">ID: {resource.id.split('-')[0]}</p>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

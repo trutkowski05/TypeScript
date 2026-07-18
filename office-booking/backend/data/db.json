@@ -14,5 +14,13 @@
       "isActive": true
     }
   ],
-  "bookings": []
+  "bookings": [
+    {
+      "id": "a92e6d59-d9b2-4a22-823f-78bf416f6353",
+      "userId": "99e68513-fff6-415a-928e-12b79ed3c999",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-07-18",
+      "status": "ACTIVE"
+    }
+  ]
 }
