@@ -5,6 +5,8 @@ import path from 'path'
 import cors from 'cors'
 import resourceRoutes from './routes/resourceRoutes'
 import { errorHandler } from './middlewares/errorHandler'
+import bookingRoutes from './routes/bookingRoutes'
+
 
 dotenv.config()
 
@@ -19,6 +21,8 @@ app.get('/health', (req, res) => {
 })
 
 app.use('/api/v1/resources', resourceRoutes)
+app.use('/api/v1/bookings', bookingRoutes)
+
 
 app.use(errorHandler)
 

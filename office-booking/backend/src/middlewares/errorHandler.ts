@@ -14,6 +14,13 @@ export const errorHandler = (error: unknown, req: Request, res: Response, next: 
         })
     }
 
+    if (error instanceof Error) {
+        return res.status(400).json({
+            status: "error",
+            message: error.message
+        })
+    }
+    
     console.error("Błąd serwera:", error)
     return res.status(500).json({
         status: "error",
