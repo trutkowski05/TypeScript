@@ -5,11 +5,23 @@
       "email": "dyrektor@biuro.pl",
       "passwordHash": "$2b$10$.xn1QHopi48pfVmTD7jSPOMdchKP4vji7NT30D5eRuHnY1zKyS4Vq",
       "role": "ADMIN"
+    },
+    {
+      "id": "414519c2-b6f1-42e7-bc17-0dc5aec84a3d",
+      "email": "nowy@biuro.pl",
+      "passwordHash": "$2b$10$cF5fK.hz4LZTJT4z04F.s.94JvtLFUIlzBOC/mOobElzaswb3Y3CC",
+      "role": "EMPLOYEE"
+    },
+    {
+      "id": "3cd7b55c-8425-4db7-8465-8339056db358",
+      "email": "example@example.com",
+      "passwordHash": "$2b$10$h5MDvjS2DwSkWl9yv3LpjuU/CG0JvKx..3KnA5Q7JBsK.5jkmgs4C",
+      "role": "EMPLOYEE"
     }
   ],
   "resources": [
     {
-      "id": "123",
+      "id": "11111111-2222-3333-4444-555555555555",
       "name": "Biurko przy oknie",
       "type": "DESK",
       "isActive": true
@@ -27,6 +39,20 @@
       "userId": "99e68513-fff6-415a-928e-12b79ed3c999",
       "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
       "date": "2026-07-18",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "6168cbfb-779c-4950-b16c-4da47302c29b",
+      "userId": "414519c2-b6f1-42e7-bc17-0dc5aec84a3d",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-07-30",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "35e208e7-3cd8-4fa7-9fb2-64f651b09259",
+      "userId": "3cd7b55c-8425-4db7-8465-8339056db358",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-08-06",
       "status": "ACTIVE"
     }
   ]

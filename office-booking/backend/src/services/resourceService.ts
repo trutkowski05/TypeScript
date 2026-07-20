@@ -4,9 +4,24 @@ import { CreateResourceInput } from "../schemas/resource.schema";
 
 export const resourceService = {
 
-    async getAll() {
+    async getAll(date?: string) {
         const db = await fileRepository.readDB()
-        return db.resources
+        
+        if (!date) {
+            return db.resources
+        }
+
+        return db.resources.map(resource => {
+            const isBooked = db.bookings.some(b => 
+                b.resourceId === resource.id && 
+                b.date === date && 
+                b.status === 'ACTIVE'
+            )
+            return {
+                ...resource,
+                isBooked
+            }
+        })
     },
 
     async create(data: CreateResourceInput) {

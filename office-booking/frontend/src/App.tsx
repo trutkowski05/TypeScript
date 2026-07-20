@@ -1,35 +1,47 @@
-import { ResourceList } from './components/ResourceList'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Dashboard } from './pages/Dashboard';
+
+// To jest nasz "Strażnik Teksasu" po stronie Reacta. 
+// Owijamy w niego każdą prywatną stronę (np. Dashboard).
+// Jeśli ktoś nie ma biletu, brutalnie odsyłamy go na /login
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { token } = useAuth();
+  
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
-      {/* Pasek nawigacji */}
-      <nav className="bg-white border-b border-slate-200 px-8 py-4 shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
-            OB
-          </div>
-          <h1 className="text-xl font-semibold tracking-tight text-slate-900">
-            Office Booking
-          </h1>
-        </div>
-      </nav>
+    // AuthProvider to nasz Mózg z poprzedniego kroku
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Strona publiczna - Logowanie */}
+          <Route path="/login" element={<Login />} />
+          
+          {/* Strona publiczna - Rejestracja */}
+          <Route path="/register" element={<Register />} />
 
-      {/* Główna zawartość */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-10 text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-            Zarządzaj swoją przestrzenią
-          </h2>
-          <p className="mt-4 text-lg leading-8 text-slate-600 max-w-2xl mx-auto">
-            Witaj w nowoczesnym systemie rezerwacji. Znajdź idealne biurko lub salę na dzisiejsze spotkania.
-          </p>
-        </div>
-
-        <ResourceList />
-      </main>
-    </div>
-  )
+          {/* Strona chroniona - Nasze Biurka */}
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;

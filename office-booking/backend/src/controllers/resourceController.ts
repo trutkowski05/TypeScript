@@ -4,7 +4,8 @@ import { resourceService } from "../services/resourceService";
 
 export const getAllResources = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const resources = await resourceService.getAll()
+        const date = req.query.date as string | undefined;
+        const resources = await resourceService.getAll(date)
         
         return res.status(200).json({
             status: "success",

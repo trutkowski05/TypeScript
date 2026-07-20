@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import type { Resource } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 export const ResourceList = () => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>('');
+  
+  const { token, user } = useAuth();
 
   const handleBooking = async (resourceId: string) => {
     if (!selectedDate) {
@@ -18,10 +21,11 @@ export const ResourceList = () => {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           resourceId: resourceId, 
-          userId: "99e68513-fff6-415a-928e-12b79ed3c999", 
+          userId: user?.id, 
           date: selectedDate
         })
       });
@@ -34,6 +38,8 @@ export const ResourceList = () => {
 
       alert("SUKCES! " + json.message);
       
+      await fetchResources();
+      
     } catch (err: unknown) {
       if (err instanceof Error) {
         alert("BŁĄD: " + err.message);
@@ -41,23 +47,28 @@ export const ResourceList = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchResources = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/v1/resources');
-        if (!response.ok) throw new Error('Nie udało się pobrać danych z serwera');
+  const fetchResources = async () => {
+    try {
+      const url = selectedDate 
+        ? `http://localhost:3000/api/v1/resources?date=${selectedDate}` 
+        : 'http://localhost:3000/api/v1/resources';
         
-        const json = await response.json();
-        setResources(json.data);
-      } catch (err: unknown) {
-        if (err instanceof Error) setError(err.message);
-        else setError('Wystąpił błąd');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Nie udało się pobrać danych z serwera');
+      
+      const json = await response.json();
+      setResources(json.data);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError('Wystąpił błąd');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchResources();
-  }, []);
+  }, [selectedDate]);
 
   if (isLoading) {
     return (
@@ -126,14 +137,20 @@ export const ResourceList = () => {
             <div className="mt-auto pt-4 border-t border-slate-100">
               <button 
                 onClick={() => handleBooking(resource.id)} 
-                disabled={!resource.isActive} 
+                disabled={!resource.isActive || resource.isBooked} 
                 className={`w-full py-2 rounded-lg font-semibold transition-colors ${
-                  resource.isActive 
-                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
-                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  resource.isBooked 
+                  ? 'bg-red-100 text-red-500 cursor-not-allowed'
+                  : resource.isActive 
+                    ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
+                    : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 }`}
               >
-                {resource.isActive ? 'Zarezerwuj to miejsce' : 'Niedostępne'}
+                {resource.isBooked 
+                  ? 'Zarezerwowane na ten dzień' 
+                  : resource.isActive 
+                    ? 'Zarezerwuj to miejsce' 
+                    : 'Niedostępne'}
               </button>
             </div>
 
