@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export const Login = () => {
@@ -7,13 +7,12 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
-  // Narzędzia z naszego nowego systemu
-  const navigate = useNavigate(); // Do przekierowywania na inne strony
-  const { login } = useAuth(); // Nasz Mózg, żeby zapisać bilet!
+  const navigate = useNavigate(); 
+  const { login } = useAuth(); 
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); // Powstrzymuje stronę przed odświeżeniem po kliknięciu "Zaloguj"
-    setError(''); // Czyścimy stare błędy
+    e.preventDefault(); 
+    setError(''); 
 
     try {
       const response = await fetch('http://localhost:3000/api/v1/auth/login', {
@@ -28,11 +27,8 @@ export const Login = () => {
         throw new Error(data.message || 'Wystąpił błąd logowania');
       }
 
-      // SUKCES! Serwer dał nam Bilet (token) i Wizytówkę (user).
-      // Wrzucamy to do naszego plecaka!
       login(data.data.token, data.data.user);
 
-      // Skoro mamy bilet, jedziemy na główną stronę biurek!
       navigate('/');
       
     } catch (err: unknown) {
@@ -91,13 +87,6 @@ export const Login = () => {
             Wejdź do systemu
           </button>
         </form>
-
-        <div className="mt-6 text-center text-sm text-slate-500">
-          Nie masz jeszcze konta?{' '}
-          <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Zarejestruj się
-          </Link>
-        </div>
       </div>
     </div>
   );
