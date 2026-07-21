@@ -14,6 +14,7 @@ export interface Resource {
     name: string
     type: Type
     isActive: boolean
+    isBooked?: boolean
 }
 
 export type Status = 'ACTIVE' | 'CANCELLED'

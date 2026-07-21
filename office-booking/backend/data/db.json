@@ -21,12 +21,6 @@
   ],
   "resources": [
     {
-      "id": "11111111-2222-3333-4444-555555555555",
-      "name": "Biurko przy oknie",
-      "type": "DESK",
-      "isActive": true
-    },
-    {
       "id": "11e68513-fff6-415a-928e-12b79ed3c137",
       "name": "Moje super nowe biurko",
       "type": "DESK",
@@ -53,6 +47,27 @@
       "userId": "3cd7b55c-8425-4db7-8465-8339056db358",
       "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
       "date": "2026-08-06",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "f3d54ef8-4a74-4b8c-8262-ee26df528e31",
+      "userId": "3cd7b55c-8425-4db7-8465-8339056db358",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-07-31",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "b79c61f2-21fb-4fb0-83d4-b08e5298f859",
+      "userId": "3cd7b55c-8425-4db7-8465-8339056db358",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-10-22",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "9ebab25a-b1a9-405f-b966-ba659378f859",
+      "userId": "3cd7b55c-8425-4db7-8465-8339056db358",
+      "resourceId": "11e68513-fff6-415a-928e-12b79ed3c137",
+      "date": "2026-09-17",
       "status": "ACTIVE"
     }
   ]

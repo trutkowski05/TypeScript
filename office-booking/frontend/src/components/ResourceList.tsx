@@ -25,7 +25,6 @@ export const ResourceList = () => {
         },
         body: JSON.stringify({
           resourceId: resourceId, 
-          userId: user?.id, 
           date: selectedDate
         })
       });

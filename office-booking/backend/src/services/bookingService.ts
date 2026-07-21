@@ -4,7 +4,7 @@ import { CreateBookingInput } from "../schemas/booking.schema";
 import { Booking } from "../types";
 
 export const bookingService = {
-    async create(data : CreateBookingInput) {
+    async create(data : CreateBookingInput, userId: string) {
 
         const db = await fileRepository.readDB()
 
@@ -29,7 +29,7 @@ export const bookingService = {
 
     const newBooking: Booking = {
         id: randomUUID(),
-        userId: data.userId,
+        userId: userId,
         resourceId: data.resourceId,
         date: data.date,
         status: 'ACTIVE'
